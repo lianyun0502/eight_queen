@@ -14,7 +14,13 @@ def show_answer(board:np.ndarray):
     global ans_num
     ans_num = ans_num + 1
     print(f"Answer {ans_num}------------------")
-    print(board)
+    for i in range(queen_num):
+        for j in range(queen_num):
+            if board[i][j] == 2:
+                print("Q", end="")
+            else:
+                print(".", end="")
+        print()
     pass
 
 def set_queen(queen_idx:int, board:np.ndarray)->bool:
@@ -24,11 +30,11 @@ def set_queen(queen_idx:int, board:np.ndarray)->bool:
         return True # answer is found
     
     for i in range(queen_num):
-        for j in range(queen_num):
-            if board[i][j] == 0:
+        for j in range(queen_num-queen_idx):
+            if board[i][j+queen_idx] == 0:
                 board_copy = board.copy()
-                board_copy[i][j] = 2
-                board_after_disable = set_disable_position(i, j, board_copy)
+                board_copy[i][j+queen_idx] = 2
+                board_after_disable = set_disable_position(i, j+queen_idx, board_copy)
                 set_queen(queen_idx+1, board_after_disable)
 
     return False # no answer
