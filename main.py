@@ -13,7 +13,8 @@ def main():
     s = time.time() # 計算程式執行時間 s = start time
     global queen_num, ans_num, division_8, division_4, division_2
     board = np.zeros((queen_num, queen_num), dtype='int8') 
-    set_queen(0, board)
+    row_for_iter = [i for i in range(queen_num)] # 只需遍歷一半的row，因為另一半是對稱的
+    set_queen(0, board, row_for_iter)
     print(f"Total answer: {ans_num}")
 
     
@@ -163,7 +164,7 @@ def show_answer(board:np.ndarray):
         print()
     pass
 
-def set_queen(queen_idx:int, board:np.ndarray)->bool:
+def set_queen(queen_idx:int, board:np.ndarray, row_for_iter:list)->bool:
     '''
     我採用遞迴的方式來解此題，每次遞迴都會將queen_idx+1，直到queen_idx == queen_num，
     這代表所有皇后都已經放置完成，為一組答案。
@@ -176,13 +177,15 @@ def set_queen(queen_idx:int, board:np.ndarray)->bool:
         show_answer(board) # 印出答案 不印出答案可註解此行
         return True # answer is found
     
-    for i in range(queen_num):
+    for i in row_for_iter:
         for j in range(queen_num-queen_idx):
             if board[i][j+queen_idx] == 0: 
                 board_copy = board.copy() # 這裡需要copy一份新的棋盤，用於回溯不適答案的狀況
                 board_copy[i][j+queen_idx] = 2 # 置入皇后
                 board_after_disable = set_disable_position(i, j+queen_idx, board_copy)
-                set_queen(queen_idx+1, board_after_disable) # 遞迴放置下一個皇后的步驟
+                row_for_next_iter = row_for_iter.copy()
+                row_for_next_iter.remove(i) # 將已經放置皇后的row從row_for_iter中移除，避免重複放置皇后
+                set_queen(queen_idx+1, board_after_disable, row_for_next_iter) # 遞迴放置下一個皇后的步驟
 
     return False # no answer
 
