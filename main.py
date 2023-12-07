@@ -153,10 +153,6 @@ def show_answer(board:np.ndarray):
     '''
     依照答案的二維矩陣印出題目要求的輸出格式
     '''
-    global ans_num
-    ans_num = ans_num + 1
-    
-    print(f"Answer {ans_num}------------------")
     # check_individual_answer(board) # 判斷此解是否為獨立解 不判斷對稱解可註解此行
     for i in range(queen_num):
         for j in range(queen_num):
@@ -172,9 +168,12 @@ def set_queen(queen_idx:int, board:np.ndarray)->bool:
     我採用遞迴的方式來解此題，每次遞迴都會將queen_idx+1，直到queen_idx == queen_num，
     這代表所有皇后都已經放置完成，為一組答案。
     '''
-    global queen_num
+    global queen_num, ans_num
     if queen_idx == queen_num: # 最後一個皇后有位置放置，代表找到一組答案
-        show_answer(board)
+            
+        ans_num = ans_num + 1
+        print(f"Answer {ans_num}------------------")
+        show_answer(board) # 印出答案 不印出答案可註解此行
         return True # answer is found
     
     for i in range(queen_num):
